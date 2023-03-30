@@ -18,11 +18,11 @@ namespace DependencyInjectionDemoProject
 
             Console.Write("Enter your password");
             var password = Console.ReadLine();
-            var business = new Business();
+            IBusiness business = new Business();
             business.SignUp(userName, password);
         }
     }
-    public class Business 
+    public class Business: IBusiness
     {
         public void SignUp(string userName, string password)
         {
@@ -31,11 +31,28 @@ namespace DependencyInjectionDemoProject
             dataAccess.Store(userName, password);
         }
     }
-    public class DataAccess
+    public class BusinessV2 : IBusiness
+    {
+        public void SignUp(string userName, string password)
+        {
+            // validation
+            var dataAccess = new DataAccess();
+            dataAccess.Store(userName, password);
+        }
+    }
+    public class DataAccess:IDataAccess
     {
         public void Store(string userName, string password)
         {
             // write the data to the db
         }
+    }
+    public interface IBusiness
+    {
+        void SignUp(string userName, string password);
+    }
+    public interface IDataAccess
+    {
+        void Store(string userName, string password);
     }
 }
