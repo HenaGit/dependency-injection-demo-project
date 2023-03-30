@@ -6,29 +6,42 @@ namespace DependencyInjectionDemoProject
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            IDataAccess dal = new DataAccess();
+            IBusiness business = new Business(dal);
+            var userInterface = new UserInterface(business);
+            userInterface.GetData();
+
         }
     }
     public class UserInterface
     {
+        private readonly IBusiness _buisness;
+        public UserInterface(IBusiness business)
+        {
+            _buisness = business;
+        }
         public void GetData()
         {
             Console.Write("Enter your username:");
             var userName = Console.ReadLine();
 
-            Console.Write("Enter your password");
+            Console.Write("Enter your password:");
             var password = Console.ReadLine();
-            IBusiness business = new Business();
-            business.SignUp(userName, password);
+            //IDataAccess dal = new DataAccess();
+            //IBusiness business = new Business(dal);
+            _buisness.SignUp(userName, password);
         }
     }
     public class Business: IBusiness
     {
+        private readonly IDataAccess _dataAccess;
+        public Business(IDataAccess dataAccess)
+        {
+            _dataAccess = dataAccess;
+        }
         public void SignUp(string userName, string password)
         {
-            // validation
-            var dataAccess = new DataAccess();
-            dataAccess.Store(userName, password);
+            _dataAccess.Store(userName, password);
         }
     }
     public class BusinessV2 : IBusiness
