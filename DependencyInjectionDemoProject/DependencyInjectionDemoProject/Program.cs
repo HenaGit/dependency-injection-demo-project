@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionDemoProject
 {
@@ -6,8 +7,12 @@ namespace DependencyInjectionDemoProject
     {
         static void Main(string[] args)
         {
-            IDataAccess dal = new DataAccess();
-            IBusiness business = new Business(dal);
+            var collection = new ServiceCollection();
+            collection.AddScoped<IDataAccess, DataAccess>();
+            collection.AddScoped<IBusiness, Business>();
+            var provider = collection.BuildServiceProvider();
+            IDataAccess dal = provider.GetService<IDataAccess>();
+            IBusiness business = provider.GetService<IBusiness>();
             var userInterface = new UserInterface(business);
             userInterface.GetData();
 
@@ -46,6 +51,11 @@ namespace DependencyInjectionDemoProject
     }
     public class BusinessV2 : IBusiness
     {
+        private readonly IDataAccess _dataAccess;
+        public BusinessV2(IDataAccess dataAccess)
+        {
+            _dataAccess = dataAccess;
+        }
         public void SignUp(string userName, string password)
         {
             // validation
