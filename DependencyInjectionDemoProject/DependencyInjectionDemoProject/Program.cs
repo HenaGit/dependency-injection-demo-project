@@ -9,7 +9,7 @@ namespace DependencyInjectionDemoProject
         {
             var collection = new ServiceCollection();
             collection.AddScoped<IDataAccess, DataAccess>();
-            collection.AddScoped<IBusiness, Business>();
+            collection.AddScoped<IBusiness, BusinessV2>();
             var provider = collection.BuildServiceProvider();
             IDataAccess dal = provider.GetService<IDataAccess>();
             IBusiness business = provider.GetService<IBusiness>();
@@ -58,9 +58,7 @@ namespace DependencyInjectionDemoProject
         }
         public void SignUp(string userName, string password)
         {
-            // validation
-            var dataAccess = new DataAccess();
-            dataAccess.Store(userName, password);
+            _dataAccess.Store(userName, password);
         }
     }
     public class DataAccess:IDataAccess
